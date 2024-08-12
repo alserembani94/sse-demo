@@ -1,9 +1,11 @@
 import express, { Request, Response } from 'express';
+import cors from 'cors';
 import path from 'path';
 import fs from 'fs/promises';
 
 const app = express();
 const port = 3000;
+app.use(cors());
 
 app.get('/', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, './public/index.html'));
@@ -25,11 +27,6 @@ app.get('/events', async (req: Request, res: Response) => {
         const intervalId = setInterval(() => {
             if (index < words.length) {
                 let word = words[index];
-                if (word.trim() === '') {
-                    word = 'SPACE';
-                } else if (word.includes('\n')) {
-                    word = 'NEWLINE';
-                }
                 res.write(`data: ${word}\n\n`);
                 index++;
             } else {
