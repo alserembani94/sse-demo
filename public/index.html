@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE Demo</title>
+    <style>
+        #output {
+            font-size: 18px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Server-Sent Events Demo</h1>
+    <div id="output"></div>
+
+    <script>
+        const output = document.getElementById('output');
+        const eventSource = new EventSource('/events');
+
+        eventSource.onmessage = function(event) {
+            let word = event.data;
+            if (word === 'SPACE') {
+                output.appendChild(document.createTextNode(' '));
+            } else if (word === 'NEWLINE') {
+                output.appendChild(document.createElement('br'));
+            } else {
+                output.appendChild(document.createTextNode(word + ''));
+            }
+        };
+
+        eventSource.addEventListener('close', function(event) {
+            console.log(event.data);
+            eventSource.close();
+        });
+    </script>
+</body>
+</html>
